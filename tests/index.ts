@@ -12,6 +12,7 @@ const main = async () => {
   config.accounts.forEach(async acc => {
     logger.note('Select eth account', acc.ethPK);
 
+    const timeBegin = Date.now();
     const total = [];
     let res;
 
@@ -39,7 +40,10 @@ const main = async () => {
     res = await operation(acc, TOKEN.ERC20, EXCHANGE_MODE.ONE_TO_ETH, config.erc20Address);
     total.push({ type: EXCHANGE_MODE.ONE_TO_ETH, token: TOKEN.ERC20, result: res });
 
+    const timeLeft = (Date.now() - timeBegin) / 1000;
+
     logger.note('---------- // ---------');
+    logger.note(`---------- time: ${timeLeft} sec ---------`);
     logger.note('---------- TOTAL ---------');
     displayTotal(total);
   });
