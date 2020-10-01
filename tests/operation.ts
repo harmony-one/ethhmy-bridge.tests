@@ -7,11 +7,14 @@ import { getWeb3Client } from './blockchain-bridge';
 import { checkStatus, getEthBalance, getOneBalance, logOperationParams } from './operation-helpers';
 import { ethToOne } from './operations/ethToOne';
 import { oneToEth } from './operations/oneToEth';
+import { oneToEthErc20 } from './operations/oneToEthErc20';
+import { ethToOneErc20 } from './operations/ethToOneErc20';
 
 export const operation = async (
   acc: { ethPK: string; hmyPK: string },
   token: TOKEN,
-  type: EXCHANGE_MODE
+  type: EXCHANGE_MODE,
+  erc20Address = ''
 ) => {
   const prefix = `[${token.toUpperCase()}: ${type.toUpperCase()}]`;
 
@@ -21,8 +24,8 @@ export const operation = async (
     const web3Client = getWeb3Client(acc.ethPK);
     const hmyClient = getHmyClient(acc.hmyPK);
 
-    const ethBalanceBefore = await getEthBalance(web3Client, token);
-    const oneBalanceBefore = await getOneBalance(hmyClient, token);
+    const ethBalanceBefore = await getEthBalance(web3Client, token, erc20Address);
+    const oneBalanceBefore = await getOneBalance(hmyClient, web3Client, token, erc20Address);
 
     const operationParams = {
       oneAddress: hmyClient.userAddress,
@@ -30,6 +33,7 @@ export const operation = async (
       amount: 1,
       type,
       token,
+      erc20Address,
       id: uuid(),
     };
 
@@ -46,23 +50,45 @@ export const operation = async (
     logger.success({ prefix, message: 'create operation' });
     logger.info({ prefix, message: 'operation ID: ' + operation.id });
 
-    const ethMethods = token === TOKEN.BUSD ? web3Client.ethMethodsBUSD : web3Client.ethMethodsLINK;
-    const hmyMethods = token === TOKEN.BUSD ? hmyClient.hmyMethodsBUSD : hmyClient.hmyMethodsLINK;
+    let ethMethods, hmyMethods;
 
-    if (type === EXCHANGE_MODE.ETH_TO_ONE) {
-      const res = await ethToOne(operationParams, ethMethods, prefix);
+    switch (token) {
+      case TOKEN.BUSD:
+        hmyMethods = hmyClient.hmyMethodsBUSD;
+        ethMethods = web3Client.ethMethodsBUSD;
+        break;
+      case TOKEN.LINK:
+        hmyMethods = hmyClient.hmyMethodsLINK;
+        ethMethods = web3Client.ethMethodsLINK;
+        break;
+      case TOKEN.ERC20:
+        hmyMethods = hmyClient.hmyMethodsERC20;
+        ethMethods = web3Client.ethMethodsERC20;
+        break;
+    }
 
-      if (!res) {
-        return false;
+    let res = false;
+
+    if (token === TOKEN.ERC20) {
+      if (type === EXCHANGE_MODE.ETH_TO_ONE) {
+        res = await ethToOneErc20(operationParams, ethMethods, hmyMethods, prefix);
+      }
+
+      if (type === EXCHANGE_MODE.ONE_TO_ETH) {
+        res = await oneToEthErc20(operationParams, ethMethods, hmyMethods, prefix);
+      }
+    } else {
+      if (type === EXCHANGE_MODE.ETH_TO_ONE) {
+        res = await ethToOne(operationParams, ethMethods, prefix);
+      }
+
+      if (type === EXCHANGE_MODE.ONE_TO_ETH) {
+        res = await oneToEth(operationParams, ethMethods, hmyMethods, prefix);
       }
     }
 
-    if (type === EXCHANGE_MODE.ONE_TO_ETH) {
-      const res = await oneToEth(operationParams, ethMethods, hmyMethods, prefix);
-
-      if (!res) {
-        return false;
-      }
+    if (!res) {
+      return false;
     }
 
     operation = await operationService.getOperation(operation.id);
@@ -71,7 +97,7 @@ export const operation = async (
       return false;
     }
 
-    const ethBalanceAfter = await getEthBalance(web3Client, token);
+    const ethBalanceAfter = await getEthBalance(web3Client, token, erc20Address);
     logger.info({ prefix, message: 'ETH balance before: ' + ethBalanceBefore });
     logger.info({ prefix, message: 'ETH balance after: ' + ethBalanceAfter });
 
@@ -87,7 +113,7 @@ export const operation = async (
       logger.success({ prefix, message: 'ETH balance after OK' });
     }
 
-    const oneBalanceAfter = await getOneBalance(hmyClient, token);
+    const oneBalanceAfter = await getOneBalance(hmyClient, web3Client, token, erc20Address);
     logger.info({ prefix, message: 'ONE balance before: ' + oneBalanceBefore });
     logger.info({ prefix, message: 'ONE balance after: ' + oneBalanceAfter });
 

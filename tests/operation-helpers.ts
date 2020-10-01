@@ -64,28 +64,62 @@ export const getEthBalance = async (web3Client: IWeb3Client, token, erc20 = null
     case TOKEN.LINK:
       return await web3Client.ethMethodsLINK.checkEthBalance(web3Client.userAddress);
     case TOKEN.ERC20:
-      return await web3Client.ethMethodsERC20.checkEthBalance(erc20, web3Client.userAddress);
+      const erc20TokenDetails = await web3Client.ethMethodsERC20.tokenDetails(erc20);
+
+      if (!erc20TokenDetails) {
+        return 0;
+      }
+
+      const balance = await web3Client.ethMethodsERC20.checkEthBalance(
+        erc20,
+        web3Client.userAddress
+      );
+
+      return balance / Number('1e' + erc20TokenDetails.decimals);
   }
 };
 
-export const getOneBalance = async (hmyClient: IHmyClient, token, erc20 = null) => {
+export const getOneBalance = async (
+  hmyClient: IHmyClient,
+  web3Client: IWeb3Client,
+  token,
+  erc20 = null
+) => {
   switch (token) {
     case TOKEN.BUSD:
       return await hmyClient.hmyMethodsBUSD.checkHmyBalance(hmyClient.userAddress);
     case TOKEN.LINK:
       return await hmyClient.hmyMethodsLINK.checkHmyBalance(hmyClient.userAddress);
     case TOKEN.ERC20:
-      return await hmyClient.hmyMethodsERC20.checkHmyBalance(erc20, hmyClient.userAddress);
+      const hrc20Address = await hmyClient.hmyMethodsERC20.getMappingFor(erc20);
+
+      const erc20TokenDetails = await web3Client.ethMethodsERC20.tokenDetails(erc20);
+
+      if (!Number(hrc20Address) || !erc20TokenDetails) {
+        return 0;
+      }
+
+      const balance = await hmyClient.hmyMethodsERC20.checkHmyBalance(
+        hrc20Address,
+        hmyClient.userAddress
+      );
+
+      return balance / Number('1e' + erc20TokenDetails.decimals);
   }
 };
 
 export const logOperationParams = (operationParams: IOperationParams, prefix) => {
-  logger.info({ prefix, message: 'ONE address: ' + operationParams.oneAddress });
-  logger.info({ prefix, message: 'ETH address: ' + operationParams.ethAddress });
-
   logger.info({ prefix, message: 'Operation: ' + operationParams.type });
   logger.info({ prefix, message: 'Token: ' + operationParams.token });
+
+  if (operationParams.erc20Address) {
+    logger.info({ prefix, message: 'ERC20 address: ' + operationParams.erc20Address });
+  }
+
   logger.info({ prefix, message: 'Amount: ' + operationParams.amount });
+
+  logger.info({ prefix, message: 'ONE address: ' + operationParams.oneAddress });
+  logger.info({ prefix, message: 'ETH address: ' + operationParams.ethAddress });
 };
 
 export const getActionByType = (operation, type: ACTION_TYPE) =>

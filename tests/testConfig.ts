@@ -10,5 +10,6 @@ export const config = {
       hmyPK: '',
     },
   ],
+  erc20Address: '0xd975f1e987f24a5decfb656bebe7cc492969389a',
   logLevel: 1, // 2: full, 1; errors + success, 0; only errors
 };

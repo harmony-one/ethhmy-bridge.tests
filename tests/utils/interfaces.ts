@@ -63,5 +63,5 @@ export interface IOperationParams {
   amount: number;
   ethAddress: string;
   oneAddress: string;
-  erc20?: string;
+  erc20Address?: string;
 }
