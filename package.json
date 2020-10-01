@@ -1,0 +1,69 @@
+{
+  "name": "appengine-staking-dashboard",
+  "version": "0.0.1",
+  "description": "Node.js appengine for staking dashboard",
+  "private": true,
+  "main": "src/server.ts",
+  "scripts": {
+    "test": "ts-node ./tests/index.ts"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.json"
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/test/**/*.spec.(ts|js)",
+      "**/test/**/*.e2e.(ts|js)"
+    ],
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "@harmony-js/core": "^0.1.53",
+    "@openzeppelin/contracts": "^2.5.1",
+    "autobind-decorator": "^2.4.0",
+    "aws-sdk": "2.738.0",
+    "axios": "^0.19.0",
+    "bignumber.js": "^8.1.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^8.7.0",
+    "lodash": "^4.17.15",
+    "readline-sync": "^1.4.10",
+    "request": "^2.88.2",
+    "web3": "1.2.11"
+  },
+  "devDependencies": {
+    "@google-cloud/nodejs-repo-tools": "1.4.17",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "ava": "0.22.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^21.2.1",
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.2",
+    "semistandard": "^12.0.1",
+    "signale": "^1.4.0",
+    "ts-jest": "^21.1.4",
+    "ts-node": "^8.8.1",
+    "typescript": "^3.8.3"
+  }
+}
