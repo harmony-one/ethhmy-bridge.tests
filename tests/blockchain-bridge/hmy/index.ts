@@ -19,7 +19,7 @@ export interface IHmyClient {
   getBech32Address: (addr: string) => string;
 }
 
-export const getHmyClient = (hmyPK: string): IHmyClient => {
+export const getHmyClient = async (hmyPK = ''): Promise<IHmyClient> => {
   const hmy = new Harmony(
     // let's assume we deploy smart contract to this end-point URL
     process.env.HMY_NODE_URL,
@@ -29,7 +29,9 @@ export const getHmyClient = (hmyPK: string): IHmyClient => {
     }
   );
 
-  const hmyUserAccount = hmy.wallet.addByPrivateKey(hmyPK);
+  const hmyUserAccount = hmyPK
+    ? hmy.wallet.addByPrivateKey(hmyPK)
+    : await hmy.wallet.createAccount();
 
   const hmyBUSDContract = hmy.contracts.createContract(
     hmyBUSDJson.abi,

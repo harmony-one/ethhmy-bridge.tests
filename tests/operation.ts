@@ -2,8 +2,8 @@ import { logger } from './utils/logs';
 import * as operationService from './utils/api';
 import { uuid } from './utils/uuid';
 import { EXCHANGE_MODE, IOperation, TOKEN } from './utils/interfaces';
-import { getHmyClient } from './blockchain-bridge/hmy';
-import { getWeb3Client } from './blockchain-bridge';
+import { IHmyClient } from './blockchain-bridge/hmy';
+import { IWeb3Client } from './blockchain-bridge';
 import { checkStatus, getEthBalance, getOneBalance, logOperationParams } from './operation-helpers';
 import { ethToOne } from './operations/ethToOne';
 import { oneToEth } from './operations/oneToEth';
@@ -11,7 +11,8 @@ import { oneToEthErc20 } from './operations/oneToEthErc20';
 import { ethToOneErc20 } from './operations/ethToOneErc20';
 
 export const operation = async (
-  acc: { ethPK: string; hmyPK: string },
+  web3Client: IWeb3Client,
+  hmyClient: IHmyClient,
   token: TOKEN,
   type: EXCHANGE_MODE,
   erc20Address = ''
@@ -20,9 +21,6 @@ export const operation = async (
 
   try {
     logger.start({ prefix, message: `test ${token.toUpperCase()}: ${type.toUpperCase()}` });
-
-    const web3Client = getWeb3Client(acc.ethPK);
-    const hmyClient = getHmyClient(acc.hmyPK);
 
     const ethBalanceBefore = await getEthBalance(web3Client, token, erc20Address);
     const oneBalanceBefore = await getOneBalance(hmyClient, web3Client, token, erc20Address);

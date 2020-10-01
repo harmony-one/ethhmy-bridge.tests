@@ -18,10 +18,13 @@ export interface IWeb3Client {
   userAddress: string;
 }
 
-export const getWeb3Client = (ethPK): IWeb3Client => {
+export const getWeb3Client = (ethPK = ''): IWeb3Client => {
   const web3 = new Web3(web3URL);
 
-  const ethUserAccount = web3.eth.accounts.privateKeyToAccount(ethPK);
+  const ethUserAccount = ethPK
+    ? web3.eth.accounts.privateKeyToAccount(ethPK)
+    : web3.eth.accounts.create();
+
   web3.eth.accounts.wallet.add(ethUserAccount);
   web3.eth.defaultAccount = ethUserAccount.address;
 
