@@ -6,7 +6,7 @@ export const sleep = (ms: number) => {
 
 export const displayTotal = arr => {
   arr.forEach(res => {
-    if (res.status === true) {
+    if (res.result === true) {
       logger.success({
         prefix: `[${res.token.toUpperCase()}: ${res.type.toUpperCase()}]`,
         message: 'Success',

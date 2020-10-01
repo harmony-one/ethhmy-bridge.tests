@@ -10,5 +10,5 @@ export const config = {
       hmyPK: '',
     },
   ],
-  logLevel: 2, // 2: full, 1; errors + success, 0; only errors
+  logLevel: 1, // 2: full, 1; errors + success, 0; only errors
 };
