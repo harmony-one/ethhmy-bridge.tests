@@ -5,10 +5,13 @@ import { sleep } from './utils';
 import { IWeb3Client } from './blockchain-bridge/eth';
 import { IHmyClient } from './blockchain-bridge/hmy';
 
+const SLEEP_TIMEOUT_MS = 3000;
+
 export const waitAction = async (
   operationId: string,
   actionType: ACTION_TYPE,
-  prefix
+  maxTimeoutSec = 300,
+  prefix: string
 ): Promise<IAction> => {
   let operation = await operationService.getOperation(operationId);
 
@@ -16,13 +19,23 @@ export const waitAction = async (
 
   let action = getActionByType(actionType);
 
-  while (action.status === STATUS.IN_PROGRESS || action.status === STATUS.WAITING) {
+  let maxTimeoutMs = maxTimeoutSec * 1000;
+
+  while (
+    maxTimeoutMs > 0 &&
+    (action.status === STATUS.IN_PROGRESS || action.status === STATUS.WAITING)
+  ) {
     logger.info({ prefix, message: `waiting ${actionType}` });
 
     operation = await operationService.getOperation(operation.id);
     action = getActionByType(actionType);
 
-    await sleep(3000);
+    await sleep(SLEEP_TIMEOUT_MS);
+    maxTimeoutMs = maxTimeoutMs - SLEEP_TIMEOUT_MS;
+  }
+
+  if (maxTimeoutMs <= 0) {
+    throw new Error(`${actionType} time is out (${maxTimeoutSec} sec)`);
   }
 
   return action;

@@ -1,8 +1,8 @@
-import { ACTION_TYPE, IOperationParams, STATUS } from '../interfaces';
-import { logger } from '../logs';
-import { checkStatus, confirmCallback, getActionByType, waitAction } from '../../operation-helpers';
-import * as operationService from '../api';
-import { EthMethods } from '../../blockchain-bridge/eth/EthMethods';
+import { ACTION_TYPE, IOperationParams, STATUS } from '../utils/interfaces';
+import { logger } from '../utils/logs';
+import { checkStatus, confirmCallback, getActionByType, waitAction } from '../operation-helpers';
+import * as operationService from '../utils/api';
+import { EthMethods } from '../blockchain-bridge/eth/EthMethods';
 
 export const ethToOne = async (
   operationParams: IOperationParams,
@@ -40,6 +40,7 @@ export const ethToOne = async (
   const waitingBlockNumber = await waitAction(
     operationParams.id,
     ACTION_TYPE.waitingBlockNumber,
+    300,
     prefix
   );
 
@@ -47,7 +48,7 @@ export const ethToOne = async (
     return false;
   }
 
-  const mintToken = await waitAction(operationParams.id, ACTION_TYPE.mintToken, prefix);
+  const mintToken = await waitAction(operationParams.id, ACTION_TYPE.mintToken, 30, prefix);
 
   if (!checkStatus(mintToken, prefix, ACTION_TYPE.mintToken)) {
     return false;

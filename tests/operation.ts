@@ -5,8 +5,8 @@ import { EXCHANGE_MODE, IOperation, TOKEN } from './utils/interfaces';
 import { getHmyClient } from './blockchain-bridge/hmy';
 import { getWeb3Client } from './blockchain-bridge';
 import { checkStatus, getEthBalance, getOneBalance, logOperationParams } from './operation-helpers';
-import { ethToOne } from './utils/operations/ethToOne';
-import { oneToEth } from './utils/operations/oneToEth';
+import { ethToOne } from './operations/ethToOne';
+import { oneToEth } from './operations/oneToEth';
 
 export const operation = async (
   acc: { ethPK: string; hmyPK: string },

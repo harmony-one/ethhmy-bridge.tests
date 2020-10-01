@@ -1,9 +1,9 @@
-import { ACTION_TYPE, IOperationParams, STATUS } from '../interfaces';
-import { logger } from '../logs';
-import { checkStatus, confirmCallback, getActionByType, waitAction } from '../../operation-helpers';
-import * as operationService from '../api';
-import { EthMethods } from '../../blockchain-bridge/eth/EthMethods';
-import { HmyMethods } from '../../blockchain-bridge/hmy/HmyMethods';
+import { ACTION_TYPE, IOperationParams, STATUS } from '../utils/interfaces';
+import { logger } from '../utils/logs';
+import { checkStatus, confirmCallback, getActionByType, waitAction } from '../operation-helpers';
+import * as operationService from '../utils/api';
+import { EthMethods } from '../blockchain-bridge/eth/EthMethods';
+import { HmyMethods } from '../blockchain-bridge/hmy/HmyMethods';
 
 export const oneToEth = async (
   operationParams: IOperationParams,
@@ -39,7 +39,7 @@ export const oneToEth = async (
     logger.success({ prefix, message: 'burnToken' });
   }
 
-  const unlockToken = await waitAction(operationParams.id, ACTION_TYPE.unlockToken, prefix);
+  const unlockToken = await waitAction(operationParams.id, ACTION_TYPE.unlockToken, 30, prefix);
 
   if (!checkStatus(unlockToken, prefix, ACTION_TYPE.unlockToken)) {
     return false;
