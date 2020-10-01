@@ -7,6 +7,8 @@ export const logger = {
   start: (...args) => signale.start.apply(this, args),
   end: (...args) => signale.end.apply(this, args),
   success: (...args) => config.logLevel > 0 && signale.success.apply(this, args),
+  note: (...args) => config.logLevel > 0 && signale.note.apply(this, args),
+  wait: (...args) => config.logLevel > 0 && signale.wait.apply(this, args),
   info: (...args) => config.logLevel > 1 && signale.info.apply(this, args),
   pending: (...args) => config.logLevel > 1 && signale.pending.apply(this, args),
 };

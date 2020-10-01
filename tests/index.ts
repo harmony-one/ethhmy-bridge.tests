@@ -1,3 +1,5 @@
+import { displayTotal } from './utils';
+
 require('./env');
 import { config } from './testConfig';
 import { logger } from './utils/logs';
@@ -8,16 +10,30 @@ const main = async () => {
   logger.start('E2E tests');
 
   config.accounts.forEach(async acc => {
-    logger.info('Select eth account', acc.ethPK);
+    logger.note('Select eth account', acc.ethPK);
 
-    logger.info('---------- BUSD: ETH_TO_ONE ---------');
-    await operation(acc, TOKEN.BUSD, EXCHANGE_MODE.ETH_TO_ONE);
-    logger.info('---------- BUSD: ONE_TO_ETH ---------');
-    await operation(acc, TOKEN.BUSD, EXCHANGE_MODE.ONE_TO_ETH);
-    logger.info('---------- LINK: ETH_TO_ONE ---------');
-    await operation(acc, TOKEN.LINK, EXCHANGE_MODE.ETH_TO_ONE);
-    logger.info('---------- LINK: ONE_TO_ETH ---------');
-    await operation(acc, TOKEN.LINK, EXCHANGE_MODE.ONE_TO_ETH);
+    const total = [];
+
+    logger.note('---------- BUSD: ETH_TO_ONE ---------');
+    let res = await operation(acc, TOKEN.BUSD, EXCHANGE_MODE.ETH_TO_ONE);
+    total.push({ type: EXCHANGE_MODE.ETH_TO_ONE, token: TOKEN.BUSD, result: res });
+
+    logger.note('---------- BUSD: ONE_TO_ETH ---------');
+    res = await operation(acc, TOKEN.BUSD, EXCHANGE_MODE.ONE_TO_ETH);
+    total.push({ type: EXCHANGE_MODE.ONE_TO_ETH, token: TOKEN.BUSD, result: res });
+
+    logger.note('---------- LINK: ETH_TO_ONE ---------');
+    res = await operation(acc, TOKEN.LINK, EXCHANGE_MODE.ETH_TO_ONE);
+    total.push({ type: EXCHANGE_MODE.ETH_TO_ONE, token: TOKEN.LINK, result: res });
+
+    logger.note('---------- LINK: ONE_TO_ETH ---------');
+    res = await operation(acc, TOKEN.LINK, EXCHANGE_MODE.ONE_TO_ETH);
+    total.push({ type: EXCHANGE_MODE.ONE_TO_ETH, token: TOKEN.LINK, result: res });
+
+    logger.note('---------- // ---------');
+    logger.note('---------- // ---------');
+    logger.note('---------- TOTAL ---------');
+    displayTotal(total);
   });
 };
 

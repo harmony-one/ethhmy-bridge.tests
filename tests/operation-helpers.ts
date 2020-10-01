@@ -13,6 +13,8 @@ export const waitAction = async (
   maxTimeoutSec = 300,
   prefix: string
 ): Promise<IAction> => {
+  logger.wait({ prefix, message: `${actionType} (${maxTimeoutSec} sec)` });
+
   let operation = await operationService.getOperation(operationId);
 
   const getActionByType = (type: ACTION_TYPE) => operation.actions.find(a => a.type === type);
