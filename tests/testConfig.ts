@@ -6,8 +6,8 @@ export const config = {
   ],
   accounts: [
     {
-      ethPK: 'cbcf3af28e37d8b69c4ea5856f2727f57ad01d3e86bec054d71fa83fc246f35b',
-      hmyPK: '0x8a08736a0b035fbba4108bd3d67d7dc61207f18605b8cdbb692faeefd27382fd',
+      ethPK: '',
+      hmyPK: '',
     },
   ],
   erc20Address: '0xd975f1e987f24a5decfb656bebe7cc492969389a',
