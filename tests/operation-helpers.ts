@@ -4,6 +4,7 @@ import * as operationService from './utils/api';
 import { sleep } from './utils';
 import { IWeb3Client } from './blockchain-bridge/eth';
 import { IHmyClient } from './blockchain-bridge/hmy';
+import { divDecimals } from './blockchain-bridge/utils';
 
 const SLEEP_TIMEOUT_MS = 3000;
 
@@ -58,11 +59,14 @@ export const checkStatus = (operation: { status: STATUS }, prefix, actionName) =
 };
 
 export const getEthBalance = async (web3Client: IWeb3Client, token, erc20 = null) => {
+  let res = 0;
   switch (token) {
     case TOKEN.BUSD:
-      return await web3Client.ethMethodsBUSD.checkEthBalance(web3Client.userAddress);
+      res = await web3Client.ethMethodsBUSD.checkEthBalance(web3Client.userAddress);
+      return divDecimals(res, 18);
     case TOKEN.LINK:
-      return await web3Client.ethMethodsLINK.checkEthBalance(web3Client.userAddress);
+      res = await web3Client.ethMethodsLINK.checkEthBalance(web3Client.userAddress);
+      return divDecimals(res, 18);
     case TOKEN.ERC20:
       const erc20TokenDetails = await web3Client.ethMethodsERC20.tokenDetails(erc20);
 
@@ -75,7 +79,7 @@ export const getEthBalance = async (web3Client: IWeb3Client, token, erc20 = null
         web3Client.userAddress
       );
 
-      return balance / Number('1e' + erc20TokenDetails.decimals);
+      return divDecimals(balance, erc20TokenDetails.decimals);
   }
 };
 
@@ -85,11 +89,14 @@ export const getOneBalance = async (
   token,
   erc20 = null
 ) => {
+  let res = 0;
   switch (token) {
     case TOKEN.BUSD:
-      return await hmyClient.hmyMethodsBUSD.checkHmyBalance(hmyClient.userAddress);
+      res = await hmyClient.hmyMethodsBUSD.checkHmyBalance(hmyClient.userAddress);
+      return divDecimals(res, 18);
     case TOKEN.LINK:
-      return await hmyClient.hmyMethodsLINK.checkHmyBalance(hmyClient.userAddress);
+      res = await hmyClient.hmyMethodsLINK.checkHmyBalance(hmyClient.userAddress);
+      return divDecimals(res, 18);
     case TOKEN.ERC20:
       const hrc20Address = await hmyClient.hmyMethodsERC20.getMappingFor(erc20);
 
@@ -104,7 +111,7 @@ export const getOneBalance = async (
         hmyClient.userAddress
       );
 
-      return balance / Number('1e' + erc20TokenDetails.decimals);
+      return divDecimals(balance, erc20TokenDetails.decimals);
   }
 };
 

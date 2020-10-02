@@ -1,5 +1,6 @@
 import { Harmony } from '@harmony-js/core';
 import { Contract } from '@harmony-js/contract';
+import { withDecimals } from '../utils';
 
 interface IHmyMethodsInitParams {
   hmy: Harmony;
@@ -34,7 +35,7 @@ export class HmyMethodsERC20 {
         // await connectToOneWallet(hmyTokenContract.wallet, null, reject);
 
         const res = await hmyTokenContract.methods
-          .approve(this.hmyManagerContract.address, String(amount * Number('1e' + decimals)))
+          .approve(this.hmyManagerContract.address, withDecimals(amount, decimals))
           .send(this.options)
           .on('transactionHash', sendTxCallback);
 
@@ -51,7 +52,7 @@ export class HmyMethodsERC20 {
         // await connectToOneWallet(this.hmyManagerContract.wallet, null, reject);
 
         const response = await this.hmyManagerContract.methods
-          .burnToken(hrc20Address, String(amount * Number('1e' + decimals)), userAddr)
+          .burnToken(hrc20Address, withDecimals(amount, decimals), userAddr)
           .send(this.options)
           .on('transactionHash', sendTxCallback);
 

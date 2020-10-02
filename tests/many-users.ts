@@ -27,19 +27,19 @@ const main = async () => {
     let res;
 
     logger.note('---------- BUSD: ETH_TO_ONE ---------');
-    res = await operation(web3Client, hmyClient, TOKEN.BUSD, EXCHANGE_MODE.ETH_TO_ONE);
+    res = await operation(web3Client, hmyClient, TOKEN.BUSD, EXCHANGE_MODE.ETH_TO_ONE, 1.12);
     total.push({ type: EXCHANGE_MODE.ETH_TO_ONE, token: TOKEN.BUSD, result: res });
 
     logger.note('---------- BUSD: ONE_TO_ETH ---------');
-    res = await operation(web3Client, hmyClient, TOKEN.BUSD, EXCHANGE_MODE.ONE_TO_ETH);
+    res = await operation(web3Client, hmyClient, TOKEN.BUSD, EXCHANGE_MODE.ONE_TO_ETH, 1.12);
     total.push({ type: EXCHANGE_MODE.ONE_TO_ETH, token: TOKEN.BUSD, result: res });
 
     logger.note('---------- LINK: ETH_TO_ONE ---------');
-    res = await operation(web3Client, hmyClient, TOKEN.LINK, EXCHANGE_MODE.ETH_TO_ONE);
+    res = await operation(web3Client, hmyClient, TOKEN.LINK, EXCHANGE_MODE.ETH_TO_ONE, 1.12);
     total.push({ type: EXCHANGE_MODE.ETH_TO_ONE, token: TOKEN.LINK, result: res });
 
     logger.note('---------- LINK: ONE_TO_ETH ---------');
-    res = await operation(web3Client, hmyClient, TOKEN.LINK, EXCHANGE_MODE.ONE_TO_ETH);
+    res = await operation(web3Client, hmyClient, TOKEN.LINK, EXCHANGE_MODE.ONE_TO_ETH, 1.12);
     total.push({ type: EXCHANGE_MODE.ONE_TO_ETH, token: TOKEN.LINK, result: res });
 
     const timeLeft = (Date.now() - timeBegin) / 1000;

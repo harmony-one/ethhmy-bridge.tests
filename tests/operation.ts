@@ -9,12 +9,14 @@ import { ethToOne } from './operations/ethToOne';
 import { oneToEth } from './operations/oneToEth';
 import { oneToEthErc20 } from './operations/oneToEthErc20';
 import { ethToOneErc20 } from './operations/ethToOneErc20';
+import { BigNumber } from 'bignumber.js';
 
 export const operation = async (
   web3Client: IWeb3Client,
   hmyClient: IHmyClient,
   token: TOKEN,
   type: EXCHANGE_MODE,
+  amount: number,
   erc20Address = ''
 ) => {
   const prefix = `[${token.toUpperCase()}: ${type.toUpperCase()}]`;
@@ -28,7 +30,7 @@ export const operation = async (
     const operationParams = {
       oneAddress: hmyClient.userAddress,
       ethAddress: web3Client.userAddress,
-      amount: 1,
+      amount,
       type,
       token,
       erc20Address,
@@ -101,8 +103,8 @@ export const operation = async (
 
     const ethBalanceWrong =
       type === EXCHANGE_MODE.ETH_TO_ONE
-        ? Number(ethBalanceBefore) - Number(operationParams.amount) !== Number(ethBalanceAfter)
-        : Number(ethBalanceBefore) + Number(operationParams.amount) !== Number(ethBalanceAfter);
+        ? !new BigNumber(ethBalanceBefore).minus(operationParams.amount).isEqualTo(ethBalanceAfter)
+        : !new BigNumber(ethBalanceBefore).plus(operationParams.amount).isEqualTo(ethBalanceAfter);
 
     if (ethBalanceWrong) {
       logger.error({ prefix, message: 'Wrong ETH balance after' });
@@ -117,8 +119,8 @@ export const operation = async (
 
     const oneBalanceWrong =
       type === EXCHANGE_MODE.ETH_TO_ONE
-        ? Number(oneBalanceBefore) + Number(operationParams.amount) !== Number(oneBalanceAfter)
-        : Number(oneBalanceBefore) - Number(operationParams.amount) !== Number(oneBalanceAfter);
+        ? !new BigNumber(oneBalanceBefore).plus(operationParams.amount).isEqualTo(oneBalanceAfter)
+        : !new BigNumber(oneBalanceBefore).minus(operationParams.amount).isEqualTo(oneBalanceAfter);
 
     if (oneBalanceWrong) {
       logger.error({ prefix, message: 'Wrong ONE balance after' });
