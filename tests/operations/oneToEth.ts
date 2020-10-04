@@ -4,6 +4,7 @@ import { checkStatus, confirmCallback, getActionByType, waitAction } from '../op
 import * as operationService from '../utils/api';
 import { EthMethods } from '../blockchain-bridge/eth/EthMethods';
 import { HmyMethods } from '../blockchain-bridge/hmy/HmyMethods';
+import { config } from '../testConfig';
 
 export const oneToEth = async (
   operationParams: IOperationParams,
@@ -39,7 +40,12 @@ export const oneToEth = async (
     logger.success({ prefix, message: 'burnToken' });
   }
 
-  const unlockToken = await waitAction(operationParams.id, ACTION_TYPE.unlockToken, 30, prefix);
+  const unlockToken = await waitAction(
+    operationParams.id,
+    ACTION_TYPE.unlockToken,
+    config.maxWaitingTime,
+    prefix
+  );
 
   if (!checkStatus(unlockToken, prefix, ACTION_TYPE.unlockToken)) {
     return false;

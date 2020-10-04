@@ -5,6 +5,7 @@ import * as operationService from '../utils/api';
 import { sleep } from '../utils';
 import { EthMethodsERC20 } from '../blockchain-bridge/eth/EthMethodsERC20';
 import { HmyMethodsERC20 } from '../blockchain-bridge/hmy/HmyMethodsERC20';
+import { config } from '../testConfig';
 
 export const oneToEthErc20 = async (
   operationParams: IOperationParams,
@@ -67,7 +68,12 @@ export const oneToEthErc20 = async (
     logger.success({ prefix, message: 'burnToken' });
   }
 
-  const unlockToken = await waitAction(operationParams.id, ACTION_TYPE.unlockToken, 30, prefix);
+  const unlockToken = await waitAction(
+    operationParams.id,
+    ACTION_TYPE.unlockToken,
+    config.maxWaitingTime,
+    prefix
+  );
 
   if (!checkStatus(unlockToken, prefix, ACTION_TYPE.unlockToken)) {
     return false;

@@ -5,6 +5,7 @@ import * as operationService from '../utils/api';
 import { sleep } from '../utils';
 import { EthMethodsERC20 } from '../blockchain-bridge/eth/EthMethodsERC20';
 import { HmyMethodsERC20 } from '../blockchain-bridge/hmy/HmyMethodsERC20';
+import { config } from '../testConfig';
 
 export const ethToOneErc20 = async (
   operationParams: IOperationParams,
@@ -71,7 +72,12 @@ export const ethToOneErc20 = async (
     return false;
   }
 
-  const mintToken = await waitAction(operationParams.id, ACTION_TYPE.mintToken, 30, prefix);
+  const mintToken = await waitAction(
+    operationParams.id,
+    ACTION_TYPE.mintToken,
+    config.maxWaitingTime,
+    prefix
+  );
 
   if (!checkStatus(mintToken, prefix, ACTION_TYPE.mintToken)) {
     return false;

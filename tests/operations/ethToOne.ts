@@ -3,6 +3,7 @@ import { logger } from '../utils/logs';
 import { checkStatus, confirmCallback, getActionByType, waitAction } from '../operation-helpers';
 import * as operationService from '../utils/api';
 import { EthMethods } from '../blockchain-bridge/eth/EthMethods';
+import { config } from '../testConfig';
 
 export const ethToOne = async (
   operationParams: IOperationParams,
@@ -48,7 +49,12 @@ export const ethToOne = async (
     return false;
   }
 
-  const mintToken = await waitAction(operationParams.id, ACTION_TYPE.mintToken, 30, prefix);
+  const mintToken = await waitAction(
+    operationParams.id,
+    ACTION_TYPE.mintToken,
+    config.maxWaitingTime,
+    prefix
+  );
 
   if (!checkStatus(mintToken, prefix, ACTION_TYPE.mintToken)) {
     return false;

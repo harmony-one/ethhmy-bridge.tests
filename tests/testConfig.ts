@@ -10,6 +10,7 @@ export const config = {
       hmyPK: '',
     },
   ],
-  erc20Address: '0xd975f1e987f24a5decfb656bebe7cc492969389a',
+  erc20Address: '0xd975f1e987f24a5decfb656bebe7cc492969389a', // your ERC20 token
   logLevel: 2, // 2: full, 1; errors + success, 0; only errors
+  maxWaitingTime: 80, // (sec) - time to waiting unlockToken and MintToken operations
 };
