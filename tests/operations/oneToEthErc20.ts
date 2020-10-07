@@ -40,13 +40,14 @@ export const oneToEthErc20 = async (
   if (approveHmyManger && approveHmyManger.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'approveHmyManger' });
 
-    await hmyMethods.approveHmyManger(
+    const res: any = await hmyMethods.approveHmyManger(
       hrc20Address,
       operationParams.amount,
       erc20TokenDetails.decimals,
       hash => confirmCallback(hash, approveHmyManger.type, operationParams.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'approveHmyManger' });
   }
 
@@ -57,7 +58,7 @@ export const oneToEthErc20 = async (
   if (burnToken && burnToken.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'burnToken' });
 
-    await hmyMethods.burnToken(
+    const res: any = await hmyMethods.burnToken(
       hrc20Address,
       operationParams.ethAddress,
       operationParams.amount,
@@ -65,6 +66,7 @@ export const oneToEthErc20 = async (
       hash => confirmCallback(hash, burnToken.type, operationParams.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'burnToken' });
   }
 

@@ -36,10 +36,14 @@ export const ethToOneErc20 = async (
 
     const { amount, erc20Address } = operationParams;
 
-    await ethMethods.approveEthManger(erc20Address, amount, erc20TokenDetails.decimals, hash =>
-      confirmCallback(hash, approveEthManger.type, operationParams.id)
+    const res = await ethMethods.approveEthManger(
+      erc20Address,
+      amount,
+      erc20TokenDetails.decimals,
+      hash => confirmCallback(hash, approveEthManger.type, operationParams.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'approveHmyManger' });
   }
 
@@ -50,7 +54,7 @@ export const ethToOneErc20 = async (
   if (lockToken && lockToken.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'lockToken' });
 
-    await ethMethods.lockToken(
+    const res = await ethMethods.lockToken(
       operationParams.erc20Address,
       operationParams.oneAddress,
       operationParams.amount,
@@ -58,6 +62,7 @@ export const ethToOneErc20 = async (
       hash => confirmCallback(hash, lockToken.type, operationParams.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'lockToken' });
   }
 

@@ -17,10 +17,11 @@ export const ethToOne = async (
   if (approveEthManger && approveEthManger.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'approveEthManger' });
 
-    await ethMethods.approveEthManger(operationParams.amount, hash =>
+    const res = await ethMethods.approveEthManger(operationParams.amount, hash =>
       confirmCallback(hash, approveEthManger.type, operation.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'approveEthManger' });
   }
 
@@ -31,10 +32,13 @@ export const ethToOne = async (
   if (lockToken && lockToken.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'lockToken' });
 
-    await ethMethods.lockToken(operationParams.oneAddress, operationParams.amount, hash =>
-      confirmCallback(hash, lockToken.type, operation.id)
+    const res = await ethMethods.lockToken(
+      operationParams.oneAddress,
+      operationParams.amount,
+      hash => confirmCallback(hash, lockToken.type, operation.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'lockToken' });
   }
 

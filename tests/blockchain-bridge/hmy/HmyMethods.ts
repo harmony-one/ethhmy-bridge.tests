@@ -33,7 +33,7 @@ export class HmyMethods {
       try {
         // await connectToOneWallet(this.hmyTokenContract.wallet, null, reject);
 
-        const res = await this.hmyTokenContract.methods
+        const res: any = await this.hmyTokenContract.methods
           .approve(this.hmyManagerContract.address, withDecimals(amount, 18))
           .send(this.options)
           .on('transactionHash', sendTxCallback);
@@ -55,7 +55,7 @@ export class HmyMethods {
           .send(this.options)
           .on('transactionHash', sendTxCallback);
 
-        resolve(response.transaction.id);
+        resolve(response);
       } catch (e) {
         reject(e);
       }

@@ -28,7 +28,7 @@ export class EthMethodsERC20 {
     const MyERC20Json = require('../out/MyERC20.json');
     const erc20Contract = new this.web3.eth.Contract(MyERC20Json.abi, erc20Address);
 
-    await erc20Contract.methods
+    return await erc20Contract.methods
       .approve(this.ethManagerAddress, withDecimals(amount, decimals))
       .send({
         from: this.userAddress,

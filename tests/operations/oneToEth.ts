@@ -19,10 +19,11 @@ export const oneToEth = async (
   if (approveHmyManger && approveHmyManger.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'approveHmyManger' });
 
-    await hmyMethods.approveHmyManger(operationParams.amount, hash =>
+    const res: any = await hmyMethods.approveHmyManger(operationParams.amount, hash =>
       confirmCallback(hash, approveHmyManger.type, operation.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'approveHmyManger' });
   }
 
@@ -33,10 +34,13 @@ export const oneToEth = async (
   if (burnToken && burnToken.status === STATUS.WAITING) {
     logger.pending({ prefix, message: 'burnToken' });
 
-    await hmyMethods.burnToken(operationParams.ethAddress, operationParams.amount, hash =>
-      confirmCallback(hash, burnToken.type, operation.id)
+    const res: any = await hmyMethods.burnToken(
+      operationParams.ethAddress,
+      operationParams.amount,
+      hash => confirmCallback(hash, burnToken.type, operation.id)
     );
 
+    logger.info({ prefix, message: 'Status: ' + res.status });
     logger.success({ prefix, message: 'burnToken' });
   }
 

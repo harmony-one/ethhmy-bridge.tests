@@ -56,7 +56,7 @@ export class HmyMethodsERC20 {
           .send(this.options)
           .on('transactionHash', sendTxCallback);
 
-        resolve(response.transaction.id);
+        resolve(response);
       } catch (e) {
         reject(e);
       }
