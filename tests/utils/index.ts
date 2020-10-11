@@ -8,12 +8,12 @@ export const displayTotal = arr => {
   arr.forEach(res => {
     if (res.result === true) {
       logger.success({
-        prefix: `[${res.token.toUpperCase()}: ${res.type.toUpperCase()}]`,
+        prefix: `${res.accName} [${res.token.toUpperCase()}: ${res.type.toUpperCase()}]`,
         message: 'Success',
       });
     } else {
       logger.error({
-        prefix: `[${res.token.toUpperCase()}: ${res.type.toUpperCase()}]`,
+        prefix: `${res.accName} [${res.token.toUpperCase()}: ${res.type.toUpperCase()}]`,
         message: 'Failed',
       });
     }

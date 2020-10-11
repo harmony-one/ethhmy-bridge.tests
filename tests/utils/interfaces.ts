@@ -22,6 +22,7 @@ export enum ACTION_TYPE {
   'approveHmyManger' = 'approveHmyManger',
   'burnToken' = 'burnToken',
   'unlockToken' = 'unlockToken',
+  'waitingBlockNumberHarmony' = 'waitingBlockNumberHarmony',
   'unlockTokenRollback' = 'unlockTokenRollback',
 }
 

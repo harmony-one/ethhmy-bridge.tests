@@ -44,6 +44,17 @@ export const oneToEth = async (
     logger.success({ prefix, message: 'burnToken' });
   }
 
+  const waitingBlockNumberHarmony = await waitAction(
+    operationParams.id,
+    ACTION_TYPE.waitingBlockNumberHarmony,
+    config.maxWaitingTime,
+    prefix
+  );
+
+  if (!checkStatus(waitingBlockNumberHarmony, prefix, ACTION_TYPE.waitingBlockNumberHarmony)) {
+    return false;
+  }
+
   const unlockToken = await waitAction(
     operationParams.id,
     ACTION_TYPE.unlockToken,
